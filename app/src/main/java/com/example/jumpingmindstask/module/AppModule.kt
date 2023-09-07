@@ -5,6 +5,7 @@ import androidx.room.Room
 import com.example.jumpingmindstask.BuildConfig
 import com.example.jumpingmindstask.network.Api
 import com.example.jumpingmindstask.room.DogsDatabase
+import com.example.jumpingmindstask.utils.RoomConvertors
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -47,6 +48,7 @@ object AppModule {
     @Singleton
     fun provideDatabase(app: Application): DogsDatabase =
         Room.databaseBuilder(app, DogsDatabase::class.java, "dogs_database")
+            .addTypeConverter(RoomConvertors())
             .build()
     @Provides
     @Singleton

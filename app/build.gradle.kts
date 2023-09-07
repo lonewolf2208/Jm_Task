@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -61,7 +62,7 @@ dependencies {
     // Splash Screen
     implementation ("androidx.core:core-splashscreen:1.0.1")
    //Hilt
-    implementation("com.google.dagger:hilt-android:2.44")
+    implementation("com.google.dagger:hilt-android:2.46")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     //Retrofit Dependencies
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
@@ -72,6 +73,10 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:$roomVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
+    //coilImageLibrary
+    implementation("io.coil-kt:coil:2.2.0")
+    //gson
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 }
 // Allow references to generated code
 kapt {

@@ -4,7 +4,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="color_on_background">#2F2D3B</color>
     <color name="background">#fff</color>
-    <color name="splash_screen_bacckground">#000</color>
-    <color name="selected_color">#1f1d2b</color>
-    <color name="unselected_color">#1f1d2b</color>
+    <color name="splash_screen_bacckground">#fff</color>
+    <color name="selected_color">#000</color>
+    <color name="unselected_color">#fff</color>
 </resources>

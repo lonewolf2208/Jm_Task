@@ -1,6 +1,8 @@
 package com.example.jumpingmindstask.view
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +11,11 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.jumpingmindstask.R
+import com.example.jumpingmindstask.adapter.DogsAdapter
 import com.example.jumpingmindstask.databinding.FragmentDetailsBinding
 import com.example.jumpingmindstask.databinding.FragmentHomeBinding
 import com.example.jumpingmindstask.utils.Resource
@@ -41,12 +47,57 @@ class Home : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         _binding= FragmentHomeBinding.inflate(inflater, container, false)
+        var adapter= DogsAdapter()
+
         bottomNavView?.visibility=View.VISIBLE
         lifecycleScope.launch {
             viewModel.data.collectLatest {
                 when(it){
-                    is Resource.Success -> Toast.makeText(requireContext(), it.data.toString(), Toast.LENGTH_SHORT).show()
-                    else ->Toast.makeText(requireContext(), it.error.toString(), Toast.LENGTH_SHORT).show()
+
+                    is Resource.Loading->{
+                        binding.progressBar.visibility=View.GONE
+                    }
+                    else ->
+                    {
+                        adapter.submitList(it.data)
+                        binding.SearchContainer.addTextChangedListener(object : TextWatcher {
+                            override fun beforeTextChanged(
+                                p0: CharSequence?,
+                                p1: Int,
+                                p2: Int,
+                                p3: Int,
+                            ) {
+
+                            }
+
+                            override fun onTextChanged(
+                                p0: CharSequence?,
+                                p1: Int,
+                                p2: Int,
+                                p3: Int,
+                            ) {
+                                var data = it.data?.filter {
+                                    it.breed.contains(binding.SearchContainer.text.toString())
+                                }
+                                adapter.submitList(data)
+                            }
+
+                            override fun afterTextChanged(p0: Editable?) {
+                            }
+                        })
+                        var layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                        binding.homeRecycleView.adapter= adapter
+                        binding.homeRecycleView.layoutManager=layoutManager
+                        adapter.onClickListener(object : DogsAdapter.ClickListener {
+                            override fun OnClick(position: Int) {
+                                var data = it.data?.get(position)
+                                var bundle = Bundle()
+                                bundle.putParcelable("data",data)
+                                findNavController().navigate(R.id.action_home_to_dogsInfo,bundle)
+                            }
+                        })
+
+                    }
                 }
             }
         }
