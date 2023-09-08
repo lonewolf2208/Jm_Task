@@ -18,11 +18,13 @@ import com.example.jumpingmindstask.R
 import com.example.jumpingmindstask.adapter.DogsAdapter
 import com.example.jumpingmindstask.databinding.FragmentDetailsBinding
 import com.example.jumpingmindstask.databinding.FragmentHomeBinding
+import com.example.jumpingmindstask.model.DogsDataItem
 import com.example.jumpingmindstask.utils.Resource
 import com.example.jumpingmindstask.viewModel.HomeViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.observeOn
 import kotlinx.coroutines.launch
@@ -51,6 +53,7 @@ class Home : Fragment() {
 
         bottomNavView?.visibility=View.VISIBLE
         lifecycleScope.launch {
+
             viewModel.data.collectLatest {
                 when(it){
 
@@ -61,32 +64,6 @@ class Home : Fragment() {
                     {
                         binding.progressBar.visibility=View.GONE
                         adapter.submitList(it.data)
-                        adapter.notifyDataSetChanged()
-                        binding.SearchContainer.addTextChangedListener(object : TextWatcher {
-                            override fun beforeTextChanged(
-                                p0: CharSequence?,
-                                p1: Int,
-                                p2: Int,
-                                p3: Int,
-                            ) {
-
-                            }
-
-                            override fun onTextChanged(
-                                p0: CharSequence?,
-                                p1: Int,
-                                p2: Int,
-                                p3: Int,
-                            ) {
-                                var data = it.data?.filter {
-                                    it.breed.contains(binding.SearchContainer.text.toString())
-                                }
-                                adapter.submitList(data)
-                            }
-
-                            override fun afterTextChanged(p0: Editable?) {
-                            }
-                        })
                         var layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
                         binding.homeRecycleView.adapter= adapter
                         binding.homeRecycleView.layoutManager=layoutManager
@@ -98,13 +75,57 @@ class Home : Fragment() {
                                 findNavController().navigate(R.id.action_home_to_dogsInfo,bundle)
                             }
                         })
-
+                        extracted(it, adapter)
                     }
                 }
             }
         }
         return binding.root
     }
+
+    private fun CoroutineScope.extracted(
+        it: Resource<List<DogsDataItem>>,
+        adapter: DogsAdapter,
+    ) {
+        binding.SearchContainer.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int,
+            ) {
+
+            }
+
+            override fun onTextChanged(
+                p0: CharSequence?,
+                p1: Int,
+                p2: Int,
+                p3: Int,
+            ) {
+                //Debouncing
+                launch {
+                    delay(300)
+                    var data = it.data?.filter {
+                        it.breed.contains(binding.SearchContainer.text.toString())
+                    }
+                    adapter.submitList(data)
+                    adapter.onClickListener(object : DogsAdapter.ClickListener {
+                        override fun OnClick(position: Int) {
+                            var data = data?.get(position)
+                            var bundle = Bundle()
+                            bundle.putParcelable("data", data)
+                            findNavController().navigate(R.id.action_home_to_dogsInfo, bundle)
+                        }
+                    })
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+        })
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         _binding=null

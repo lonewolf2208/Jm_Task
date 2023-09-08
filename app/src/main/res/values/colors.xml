@@ -7,4 +7,5 @@
     <color name="splash_screen_bacckground">#fff</color>
     <color name="selected_color">#000</color>
     <color name="unselected_color">#fff</color>
+    <color name="status">#01b9db</color>
 </resources>

@@ -5,8 +5,7 @@
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="android:colorBackground">@color/background</item>
         <item name="android:navigationBarColor">@color/color_on_background</item>
-        <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:statusBarColor">#fff</item>
+        <item name="android:statusBarColor">@color/status</item>
     </style>
 
     <style name="Theme.JumpingMindsTask" parent="Base.Theme.JumpingMindsTask" />
