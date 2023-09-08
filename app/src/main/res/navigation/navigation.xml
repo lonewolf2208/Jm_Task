@@ -28,5 +28,9 @@
         android:id="@+id/favorite"
         android:name="com.example.jumpingmindstask.view.Favorite"
         android:label="fragment_favorite"
-        tools:layout="@layout/fragment_favorite" />
+        tools:layout="@layout/fragment_favorite" >
+        <action
+            android:id="@+id/action_favorite_to_dogsInfo"
+            app:destination="@id/dogsInfo" />
+    </fragment>
 </navigation>

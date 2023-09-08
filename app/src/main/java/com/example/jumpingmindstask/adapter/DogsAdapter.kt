@@ -26,7 +26,7 @@ class DogsAdapter : ListAdapter<DogsDataItem, DogsAdapter.ViewHolder>(DogsCompar
     inner class ViewHolder(private val binding: HomeCardBinding) : RecyclerView.ViewHolder(binding.root) {
         init {
             itemView.setOnClickListener {
-                clickListener?.OnClick(adapterPosition)
+                clickListener?.OnClick(position)
             }
         }
         fun bind(data : DogsDataItem)

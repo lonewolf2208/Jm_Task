@@ -55,11 +55,13 @@ class Home : Fragment() {
                 when(it){
 
                     is Resource.Loading->{
-                        binding.progressBar.visibility=View.GONE
+                        binding.progressBar.visibility=View.VISIBLE
                     }
                     else ->
                     {
+                        binding.progressBar.visibility=View.GONE
                         adapter.submitList(it.data)
+                        adapter.notifyDataSetChanged()
                         binding.SearchContainer.addTextChangedListener(object : TextWatcher {
                             override fun beforeTextChanged(
                                 p0: CharSequence?,

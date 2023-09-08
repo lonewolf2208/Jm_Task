@@ -19,6 +19,7 @@ import com.example.jumpingmindstask.databinding.FragmentDogsInfoBinding
 import com.example.jumpingmindstask.databinding.FragmentFavoriteBinding
 import com.example.jumpingmindstask.utils.Resource
 import com.example.jumpingmindstask.viewModel.HomeViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,6 +30,7 @@ class Favorite : Fragment() {
     private val binding
         get()=_binding!!
     lateinit var viewModel: HomeViewModel
+    private val bottomNavView by lazy  { activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(this)[HomeViewModel::class.java]
@@ -40,17 +42,20 @@ class Favorite : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
        _binding=FragmentFavoriteBinding.inflate(inflater, container, false)
+        bottomNavView?.visibility=View.VISIBLE
         var adapter= FavoriteAdapter()
         lifecycleScope.launch {
             viewModel.data.collectLatest {
                 when(it){
 
                     is Resource.Loading->{
+                        binding.progressBar2.visibility=View.VISIBLE
                     }
                     else ->
                     {
+                        binding.progressBar2.visibility=View.GONE
                         adapter.submitList(it.data)
-                        var layoutManager = StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL)
+                        var layoutManager = LinearLayoutManager(requireContext())
                         binding.favoritesRecyclerView.adapter= adapter
                         binding.favoritesRecyclerView.layoutManager=layoutManager
                         adapter.onClickListener(object : FavoriteAdapter.ClickListener {
@@ -58,7 +63,7 @@ class Favorite : Fragment() {
                                 var data = it.data?.get(position)
                                 var bundle = Bundle()
                                 bundle.putParcelable("data",data)
-                                findNavController().navigate(R.id.dogsInfo,bundle)
+                                findNavController().navigate(R.id.action_favorite_to_dogsInfo,bundle)
                             }
                         })
 

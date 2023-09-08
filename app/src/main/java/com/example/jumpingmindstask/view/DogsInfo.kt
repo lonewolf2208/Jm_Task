@@ -11,12 +11,15 @@ import com.example.jumpingmindstask.R
 import com.example.jumpingmindstask.databinding.FragmentDetailsBinding
 import com.example.jumpingmindstask.databinding.FragmentDogsInfoBinding
 import com.example.jumpingmindstask.model.DogsDataItem
+import com.example.jumpingmindstask.utils.Resource
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class DogsInfo : Fragment() {
     private var _binding: FragmentDogsInfoBinding?=null
     private val binding
         get()=_binding!!
+    private val bottomNavView by lazy  { activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView) }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -29,11 +32,16 @@ class DogsInfo : Fragment() {
         // Inflate the layout for this fragment
          _binding=FragmentDogsInfoBinding.inflate(inflater, container, false)
         var data  = arguments?.getParcelable<DogsDataItem>("data")
-        binding.name.text=data?.breed.toString()
-        binding.dogOrigin.text=data?.origin.toString()
-        binding.image.load(data?.img.toString())
-//        Toast.makeText(requireContext(), data?.meta.toString(), Toast.LENGTH_SHORT).show()
-        binding.commonName.text=data?.meta?.notes.toString()
+        bottomNavView?.visibility = View.GONE
+
+        binding.apply {
+            name.text=data?.breed.toString()
+            dogOrigin.text=data?.origin.toString()
+            image.load(data?.img.toString())
+            commonName.text=data?.meta?.notes.toString()
+            status.text=data?.meta?.breed_status.toString()
+            otherName.text=data?.meta?.other_names.toString()
+        }
         return binding.root
     }
 
