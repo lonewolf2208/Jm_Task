@@ -1,4 +1,4 @@
-# Stack_Exchange
+# Dog Breeds
 About the project :
  1. FrameWork / Libraries - Dependency Injection (Dagger and Hilt ) , Coil(Image Loading) , Retrofit(Network Call), Room Database , Navigation , Flows , Debouncing , Coroutines <br>
  2. Features - <br>
